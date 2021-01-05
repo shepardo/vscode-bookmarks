@@ -1,14 +1,19 @@
+[![](https://vsmarketplacebadge.apphb.com/version-short/alefragnani.bookmarks.svg)](https://marketplace.visualstudio.com/items?itemName=alefragnani.bookmarks)
+[![](https://vsmarketplacebadge.apphb.com/downloads-short/alefragnani.bookmarks.svg)](https://marketplace.visualstudio.com/items?itemName=alefragnani.bookmarks)
+[![](https://vsmarketplacebadge.apphb.com/rating-short/alefragnani.bookmarks.svg)](https://marketplace.visualstudio.com/items?itemName=alefragnani.bookmarks)
+
 <p align="center">
   <br />
   <a title="Learn more about Bookmarks" href="http://github.com/alefragnani/vscode-bookmarks"><img src="https://raw.githubusercontent.com/alefragnani/vscode-bookmarks/master/images/vscode-bookmarks-logo-readme.png" alt="Bookmarks Logo" width="50%" /></a>
 </p>
 
-# What's new in Bookmarks 10.6
+# What's new in Bookmarks 12.1
 
-* Adds an all-new **Side Bar**
-* Adds **Column Position** and **Label** support
-* Adds **Localization** support
-* Adds `Collapse All` command in the **Side Bar**
+* Improved **Side Bar** usability
+* Adds automatic **Label suggestion** options
+* Full **Multi cursor** support
+* Support for **workbench.colorCustomizations** settings
+* Improved **Localization** options
 
 ## Support
 
@@ -30,8 +35,8 @@
 
 ## Sponsors
 
-<a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=vscmarket&utm_campaign=bookmarks&utm_medium=banner"><img src="https://alt-images.codestream.com/codestream_logo_bookmarks.png" width="35%"/></a></br>
-Discussing code is now as easy as highlighting a block and typing a comment right from your IDE. Take the pain out of code reviews and improve code quality.<br> <a title="Try CodeStream" href="https://sponsorlink.codestream.com/?utm_source=vscmarket&utm_campaign=bookmarks&utm_medium=banner">Try it free</a>
+<a title="Learn more about CodeStream" href="https://sponsorlink.codestream.com/?utm_source=vscmarket&utm_campaign=bookmarks&utm_medium=banner"><img src="https://alt-images.codestream.com/codestream_logo_bookmarks.png" width="35%"/></a></br>
+Eliminate context switching and costly distractions. Create and merge PRs and perform code reviews from inside your IDE while using jump-to-definition, your keybindings, and other IDE favorites.<br> <a title="Learn more about CodeStream" href="https://sponsorlink.codestream.com/?utm_source=vscmarket&utm_campaign=bookmarks&utm_medium=banner">Learn more</a>
 
 <br>
 
@@ -39,19 +44,15 @@ Discussing code is now as easy as highlighting a block and typing a comment righ
 
 It helps you to navigate in your code, moving between important positions easily and quickly. _No more need to search for code._ It also supports a set of **selection** commands, which allows you to select bookmarked lines and regions between bookmarked lines. It's really useful for log file analysis.
 
-Since version 9 you can also define **Labels** for you bookmarks!
-
 Here are some of the features that **Bookmarks** provides:
 
 * **Mark/unmark positions** in your code
 * Mark positions in your code and **give it name**
 * **Jump** forward and backward between bookmarks
 * Icons in **gutter** and **overview ruler**
-* See a list of all Bookmarks in one **file**
-* See a list of all Bookmarks in your **project**
+* See a list of all Bookmarks in one **file** and **project**
+* **Select lines** and **regions** with bookmarks
 * A dedicated **Side Bar**
-* **Select lines** with bookmarks
-* **Select regions** between bookmarks
 
 # Features
 
@@ -72,17 +73,11 @@ Here are some of the features that **Bookmarks** provides:
 
 ## Manage your bookmarks
 
-### Toggle
+### Toggle / Toggle Labeled
 
-You can easily Mark/Unmark bookmarks on any position.
+You can easily Mark/Unmark bookmarks on any position. You can even define **Labels** for each bookmark.
 
-![Toggle](images/bookmarks-toggle.png)
-
-### Toggle Labeled
-
-You can even mark _labeled_ bookmarks on any position.
-
-![Toggle](images/bookmarks-toggle-labeled.gif)
+![Toggle](images/printscreen-toggle.png)
 
 ## Navigation
 
@@ -94,7 +89,7 @@ Quicky move between bookmarks backward and forward, even if located outside the 
 
 List all bookmarks from the current file/project and easily navigate to any of them. It shows a line preview and temporarily scroll to its position.
 
-![List](images/bookmarks-list-from-all-files.gif)
+![List](images/printscreen-list-from-all-files.png)
 
 * Bookmarks from the active file only shows the line number and its contents
 * Bookmarks from other files in the project also shows the relative path and filename
@@ -108,19 +103,17 @@ You can use **Bookmarks** to easily select lines or text blocks. Simply toggle b
 
 Select all bookmarked lines. Specially useful while working with log files.
 
-![Select Lines](images/bookmarks-selection-select-line.gif)
+![Select Lines](images/printscreen-select-lines.gif)
 
 #### Expand Selection to the Next/Previous Bookmark or Shrink the Selection
 
 Manipulate the selection of lines _between_ bookmarks, up and down.
 
-![Expand/Shrink](images/bookmarks-selection-expand-shrink.gif)
-
 ## Available Settings
 
-* Allow navigation through all files that contains bookmarks (`false` by default)
+* Allow navigation through all files that contains bookmarks (`true` by default)
 ```json
-    "bookmarks.navigateThroughAllFiles": true
+    "bookmarks.navigateThroughAllFiles": false
 ```
 
 * Allow navigation to wrap around at the first and last bookmarks in scope (current file or all files) (`true` by default)
@@ -143,6 +136,7 @@ Manipulate the selection of lines _between_ bookmarks, up and down.
 ```json
     "bookmarks.backgroundLineColor"
 ```
+> Deprecated in 10.7: Use `workbench.colorCustomizations` instead. More info in [Available Colors](#available-colors)
 
 * Allow bookmarks commands, (Toggle, Jump to Next/Previous), to be displayed on the editor contex menu (`true` by default)
 ```json
@@ -161,17 +155,54 @@ Manipulate the selection of lines _between_ bookmarks, up and down.
     "bookmarks.sideBar.expanded": true
 ```
 
+* Choose how multi cursor handles already bookmarked lines (`allLinesAtOnce` by default)
+
+  * `allLinesAtOnce`: Creates bookmarks in all selected lines at once, if at least one of the lines don't have a bookmark
+  * `eachLineIndependently`: Literally toggles a bookmark in each line, instead of making all lines equals
+
+```json
+    "bookmarks.multicursor.toggleMode": "eachLineIndependently"
+```
+
+* Choose how labels are suggested when creating bookmarks (`dontUse` by default)
+
+  * `dontUse`: Don't use the selection (original behavior)
+  * `useWhenSelected`: Use the selected text _(if available)_ directly, no confirmation required
+  * `suggestWhenSelected`: Suggests the selected text _(if available)_. You still need to confirm.
+  * `suggestWhenSelectedOrLineWhenNoSelected`: Suggests the selected text _(if available)_ or the entire line (when has no selection). You still need to confirm
+
+```json
+    "bookmarks.label.suggestion": "useWhenSelected"
+```
+
+## Available Colors
+
+* Choose the background color to use on a bookmarked line
+```json
+    "workbench.colorCustomizations": {
+      "bookmarks.lineBackground": "#157EFB22"  
+    }
+```
+
+* Choose the border color to use on a bookmarked line
+```json
+    "workbench.colorCustomizations": {
+      "bookmarks.lineBorder": "#FF0000"  
+    }
+```
+
+* Choose marker color to use in the overview ruler
+```json
+    "workbench.colorCustomizations": {
+      "bookmarks.overviewRuler": "#157EFB88"  
+    }
+```
+
 ## Side Bar
 
-The **Bookmarks** are now presented in its own **Side Bar**, giving you more free space in your Explorer view. You will have a few extra commands available:
+The **Bookmarks** extension has its own **Side Bar**, with a variety of commands to improve you productivity. 
 
-* Jump to a bookmark, simply clicking in the bookmark item
-* Remove a bookmark, right clicking in the bookmark item
-* Clear the bookmark's file, right-clickin in the file item
-
-![Treeview](images/bookmarks-activity-bar.gif)
-
-> The `bookmarks.treeview.visible` setting was deprecated. If you don't want to see the **Bookmarks** icon in the Activity Bar, right-click and uncheck it from the context menu. 
+![Side Bar](images/printscreen-activity-bar.png)
 
 ## Project and Session Based
 
